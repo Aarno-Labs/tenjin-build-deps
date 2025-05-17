@@ -1,0 +1,17 @@
+FROM rust:1.86.0-bullseye
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+ENV PATH=/root/.local/bin:$PATH
+
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		ca-certificates \
+		netbase \
+		tzdata \
+                cmake \
+                ninja-build \
+	; \
+	uv tool install meson ; \
+	rm -rf /var/lib/apt/lists/*
