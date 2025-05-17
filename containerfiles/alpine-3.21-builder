@@ -1,3 +1,3 @@
 FROM alpine:3.21
 
-RUN apk update && apk add --no-cache rust cargo binutils cmake gcc g++ libgcc musl-dev ninja meson
+RUN apk update && apk add --no-cache rust cargo binutils gcc g++ libgcc musl-dev ninja meson cmake make
