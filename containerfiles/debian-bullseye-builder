@@ -10,8 +10,8 @@ RUN set -eux; \
 		ca-certificates \
 		netbase \
 		tzdata \
-                cmake \
                 ninja-build \
 	; \
 	uv tool install meson ; \
+	uv tool install cmake==3.31.6 ; \
 	rm -rf /var/lib/apt/lists/*
