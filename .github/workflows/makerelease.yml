@@ -14,8 +14,18 @@ jobs:
           - runner: ubuntu-24.04-arm
             plat_machine: arm64
     runs-on: ${{ matrix.runner }} 
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v4
+
+      - name: Log in to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Git commit timestamp
         run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
