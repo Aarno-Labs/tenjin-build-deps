@@ -1,0 +1,69 @@
+name: build and release non-LLVM deps
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+        include:
+          - runner: ubuntu-latest
+            plat_machine: x86_64
+          - runner: ubuntu-24.04-arm
+            plat_machine: arm64
+    runs-on: ${{ matrix.runner }} 
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Git commit timestamp
+        run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          cd thirdparty
+          mkdir -p out/bin
+          for x in $(ls */build*.sh); do
+            bash $x
+          done
+
+          mv out xj-build-deps 
+          tar caf xj-build-deps_${{ matrix.plat_machine }}.tar.xz xj-build-deps 
+
+          tar caf xj-bullseye-sysroot-extras_${{ matrix.plat_machine }}.tar.xz \
+                   debian-bullseye_gcc_glibc/${{ matrix.plat_machine }}
+        env:
+          SOURCE_DATE_EPOCH: ${{ env.TIMESTAMP }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.plat_machine }} 
+          path: thirdparty/*.tar.xz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true  # otherwise, we'd get arm64/xj-build-deps_arm64.tar.xz, etc
+
+      - name: Get short hash
+        run: echo "SHORTHASH=$(echo ${{ github.sha }} | cut -c1-9)" >> $GITHUB_ENV
+
+      - name: Create Release via gh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create \
+              rev-${{ env.SHORTHASH }} \
+              --notes "release for rev ${{ github.sha }}" \
+              --target ${{ github.sha }} \
+              *.tar.xz
+
