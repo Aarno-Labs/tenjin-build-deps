@@ -1,0 +1,154 @@
+name: BuildLLVM
+
+# based on the LLVM project's release action
+
+on:
+  push:
+    branches: [ "test-build-llvm" ]
+
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'LLVM Release Version'
+        required: true
+        type: string
+      upload-to-release:
+        description: 'Upload to an existing GitHub Release tag in this repo (if set)'
+        required: false
+        type: string
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner: [ubuntu-22.04, ubuntu-22.04-arm, macos-13, macos-14]
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+    # It's good practice to use setup-python, but this is also required on macos-14
+    # due to https://github.com/actions/runner-images/issues/10385
+    - uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f
+      with:
+        python-version: '3.12'
+
+    - name: Checkout builder repo
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+    - name: Checkout LLVM
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        repository: 'llvm/llvm-project'
+        ref: 'llvmorg-${{ inputs.release-version }}'
+        path: 'llvmproj'
+        clean: false
+        fetch-depth: 1
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        pip install -r ./llvmproj/llvm/utils/git/requirements.txt
+
+    - name: Install Ninja
+      uses: llvm/actions/install-ninja@22e9f909d35b50bd1181709564bfe816eaeaae81 # main
+
+    - name: Collect Variables
+      id: vars
+      shell: bash
+      run: |
+        target=$(python3 .github/scripts/print_os_arch.py)
+        release_binary_basename="LLVM-${{ inputs.release-version }}-$target"
+        echo "RELEASE_BINARY_BASENAME=$release_binary_basename" >> $GITHUB_ENV
+        echo "RELEASE_BINARY_FILENAME=$release_binary_basename.tar.xz" >> $GITHUB_ENV
+
+        target_cmake_flags="-DLLVM_RELEASE_ENABLE_PGO=OFF"
+        # The macOS builds try to cross compile some libraries so we need to
+        # add extra CMake args to disable them.
+        # See https://github.com/llvm/llvm-project/issues/99767
+        if [ "${{ runner.os }}" = "macOS" ]; then
+          target_cmake_flags="$target_cmake_flags -DCOMPILER_RT_ENABLE_IOS=OFF"
+          if [ "${{ runner.arch }}" = "ARM64" ]; then
+            arches=arm64
+          else
+            arches=x86_64
+          fi
+          target_cmake_flags="$target_cmake_flags -DDARWIN_osx_ARCHS=$arches -DDARWIN_osx_BUILTIN_ARCHS=$arches"
+        fi
+        echo "TARGET_CMAKE_FLAGS=$target_cmake_flags" >> $GITHUB_ENV
+ 
+    - name: Disable llvm-exegesis
+      shell: bash
+      run: |
+        rm -rf llvmproj/llvm/tools/llvm-exegesis
+        sed -i.bak 's/llvm-exegesis//' llvmproj/llvm/test/CMakeLists.txt
+
+    - name: Remove apparently buggy assert lld's Mach-O code
+      run: sed -i.bak 's/assert(isec->wasCoalesced);//' llvmproj/lld/MachO/InputFiles.cpp
+
+    - name: Configure and Build Clang (natively)
+      shell: bash
+      if: ${{ !startsWith(matrix.runner, 'ubuntu-') }}
+      run: |
+        bash .github/scripts/build_llvm.sh llvmproj "${{ env.TARGET_CMAKE_FLAGS }}" "${{ env.RELEASE_BINARY_BASENAME }}" native
+
+    - name: Configure and Build Clang (in container)
+      if: ${{  startsWith(matrix.runner, 'ubuntu-') }}
+      uses: docker://aarnotenjin/debian-bullseye-builder:rev-85f982358
+      with:
+        args: bash .github/scripts/build_llvm.sh llvmproj "${{ env.TARGET_CMAKE_FLAGS }}" "${{ env.RELEASE_BINARY_BASENAME }}" docker
+
+    - name: Build Clang (package)
+      shell: bash
+      if: ${{ !startsWith(matrix.runner, 'ubuntu-') }}
+      run: |
+        # This is run conditionally because for docker builds,
+        # build_llvm.sh does the packaging step (in the container).
+        ls -lh llvmproj/_build
+        ninja -v -C llvmproj/_build package
+
+    - name: Prep Package
+      shell: bash
+      run: |
+        cp llvmproj/_build/*.xz .
+        ls -lh $RELEASE_BINARY_FILENAME
+
+        # The .a files that feed in to libLLVM and libClang are huge and we don't need them!
+        # But CMake & llvm-config will barf if they are missing, so we'll replace them with empty files.
+        mkdir dota
+        tar xf $RELEASE_BINARY_FILENAME
+        rm     $RELEASE_BINARY_FILENAME
+
+        for x in `ls $RELEASE_BINARY_BASENAME/lib/libLLVM*.a`; do
+          mv $x dota/
+          touch $x
+        done
+        for x in `ls $RELEASE_BINARY_BASENAME/lib/libclang*.a`; do
+          mv $x dota/
+          touch $x
+        done
+
+        touch $RELEASE_BINARY_BASENAME/bin/llvm-exegesis
+        rm    $RELEASE_BINARY_BASENAME/bin/c-index-test
+        touch $RELEASE_BINARY_BASENAME/bin/c-index-test
+
+        echo 'computing git-src.json'
+        git log -n1 --pretty='{"commit":"%H","treehash":"%T","url":"${{ github.repositoryUrl }}"}' | jq > $RELEASE_BINARY_BASENAME/git-src.json
+        cat $RELEASE_BINARY_BASENAME/git-src.json
+
+        XZ_OPT=-9 tar caf $RELEASE_BINARY_FILENAME $RELEASE_BINARY_BASENAME
+
+        ls -lh *.tar.*
+
+    - uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 #v4.3.0
+      with:
+        name: ${{ runner.os }}-${{ runner.arch }}-built_on_${{ matrix.runner }}
+        path: |
+          *.tar.xz
+
+    - name: Upload to GitHub Release
+      if: ${{ (inputs.upload-to-release || '') != '' }}
+      run: |
+        gh release upload ${{ inputs.upload-to-release }} *.tar.xz
+      env:
+        GH_TOKEN: ${{ github.token }}
+
