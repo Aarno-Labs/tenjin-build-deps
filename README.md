@@ -1,6 +1,7 @@
 # Tenjin build dependencies
 
 * GNU Make 4.4.1
+* GNU Diff 3.11
 * GNU Patch 2.8
 * GNU Automake 1.17
 * Ninja 1.12.1
@@ -29,6 +30,15 @@ Licensing text from aggregated projects are reproduced below:
 
 ```
 Make is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published
+by the Free Software Foundation; either version 3 of the License,
+or (at your option) any later version.
+```
+
+## Diff
+
+```
+Diffutils is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 3 of the License,
 or (at your option) any later version.
