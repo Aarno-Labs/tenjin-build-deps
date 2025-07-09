@@ -17,7 +17,10 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   tar xf /inputs/*.tar.*
   cd patch-*/
 
-  LDFLAGS=-static ./configure --prefix=/outputs
+  mkdir -p $(dirname $TMPSUBDIR)
+  ln -s /outputs $TMPSUBDIR
+
+  LDFLAGS=-static ./configure --prefix=$TMPSUBDIR
   make -j4
   make install
   strip --strip-debug /outputs/bin/patch
