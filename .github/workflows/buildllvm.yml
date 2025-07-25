@@ -112,16 +112,16 @@ jobs:
         cp llvmproj/_build/*.xz .
         ls -lh $RELEASE_BINARY_FILENAME
 
-        # We want an analogue to GNU `as`. A small wrapper script around
-        # `llvm-mc` gives us a good enough approximation for now.
-        cp .github/scripts/as-wrapping-llvm-mc.sh $RELEASE_BINARY_BASENAME/bin/as
-        chmod +x                                  $RELEASE_BINARY_BASENAME/bin/as
-
         # The .a files that feed in to libLLVM and libClang are huge and we don't need them!
         # But CMake & llvm-config will barf if they are missing, so we'll replace them with empty files.
         mkdir dota
         tar xf $RELEASE_BINARY_FILENAME
         rm     $RELEASE_BINARY_FILENAME
+
+        # We want an analogue to GNU `as`. A small wrapper script around
+        # `llvm-mc` gives us a good enough approximation for now.
+        cp .github/scripts/as-wrapping-llvm-mc.sh $RELEASE_BINARY_BASENAME/bin/as
+        chmod +x                                  $RELEASE_BINARY_BASENAME/bin/as
 
         for x in `ls $RELEASE_BINARY_BASENAME/lib/libLLVM*.a`; do
           mv $x dota/
