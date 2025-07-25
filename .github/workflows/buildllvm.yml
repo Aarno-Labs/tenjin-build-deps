@@ -112,10 +112,8 @@ jobs:
         cp llvmproj/_build/*.xz .
         ls -lh $RELEASE_BINARY_FILENAME
 
-        # LLVM defaults to linking `as` to `llvm-as` but that's an assembler for
-        # LLVM bitcode, and we want an analogue to GNU `as`. A small wrapper script
-        # around `llvm-mc` gives us a good enough approximation for now.
-        rm                                        $RELEASE_BINARY_BASENAME/bin/as
+        # We want an analogue to GNU `as`. A small wrapper script around
+        # `llvm-mc` gives us a good enough approximation for now.
         cp .github/scripts/as-wrapping-llvm-mc.sh $RELEASE_BINARY_BASENAME/bin/as
         chmod +x                                  $RELEASE_BINARY_BASENAME/bin/as
 
