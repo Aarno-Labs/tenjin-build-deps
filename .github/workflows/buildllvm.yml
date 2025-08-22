@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: 'LLVM Release Version'
+        description: 'LLVM Release Version (branch `tenjin-...` in Aarno-Labs/llvm-project)'
         required: true
         type: string
       upload-to-release:
@@ -35,11 +35,11 @@ jobs:
     - name: Checkout builder repo
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-    - name: Checkout LLVM
+    - name: Checkout Tenjin LLVM
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
-        repository: 'llvm/llvm-project'
-        ref: 'llvmorg-${{ inputs.release-version }}'
+        repository: 'Aarno-Labs/llvm-project'
+        ref: 'tenjin-${{ inputs.release-version }}'
         path: 'llvmproj'
         clean: false
         fetch-depth: 1
