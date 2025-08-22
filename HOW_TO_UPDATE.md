@@ -13,9 +13,14 @@
 
 As above, but skip the first three steps.
 
-- It's probably easiest to test by repeatedly building via CI.
+- It's probably easiest to test build system tweaks by repeatedly building via CI.
   Please do this in a forked repo or branch.
 - When testing with the [BuildLLVM](https://github.com/Aarno-Labs/tenjin-build-deps/actions/workflows/buildllvm.yml) action, leave the "Upload to release tag" field empty.
 - If a release already exists that does not have the LLVM version(s) being generated,
   it can be used as the target release. Otherwise, make a new release first.
+- For LLVM-only releases, one can also manually create an empty release on GitHub
+  to hold the built artifacts. Use a release & tag name akin to `tenjin-llvm-123456789`
+  with the last part being a 9-digit prefix of a commit from `@Aarno-Labs/llvm-project`
+  and be sure to unmark the "Set as the latest release" checkbox. I also mark these as
+  "pre-releases" but that's just aesthetic. 
 
