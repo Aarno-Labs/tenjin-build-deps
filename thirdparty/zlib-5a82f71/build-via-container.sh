@@ -9,11 +9,15 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
             --network=host \
                      $IMAGENAME    sh -s <<EOF
   set -eux
-  mkdir /tmp/work
-  cd /tmp/work
+  mkdir -p $TMPSUBDIR
+  cd $TMPSUBDIR
 
-  tar xf /inputs/*.tar.*
-  cd z3-*/
+  #zlib's 1.3.1 release does not include CMake files when installing, so
+  #we build it from a more recent Git commit.
+
+  git clone https://github.com/madler/zlib.git
+  cd zlib
+  git checkout --detach 5a82f71ed1dfc0bec044d9702463dbdf84ea3b71
 
   apt-get update && apt-get -y --no-install-recommends install
 
