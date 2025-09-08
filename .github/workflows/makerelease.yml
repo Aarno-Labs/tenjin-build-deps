@@ -34,6 +34,8 @@ jobs:
         run: |
           cd thirdparty
           mkdir -p out/bin
+          mkdir -p out/lib
+          mkdir -p out/include
           for x in $(ls */build*.sh); do
             bash $x
           done
