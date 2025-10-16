@@ -23,7 +23,7 @@ cmake -G Ninja -S "$LLVMROOT"/llvm -B "$BUILD_DIR" \
             -DLLVM_ENABLE_CURL=OFF \
             -DLLVM_ENABLE_HTTPLIB=OFF \
             -DLLVM_ENABLE_TERMINFO=OFF \
-            -DLLVM_ENABLE_PROJECTS="llvm;clang;lld" \
+            -DLLVM_ENABLE_PROJECTS="llvm;clang;lld;clang-tools-extra;openmp" \
             -DLLVM_USE_RELATIVE_PATHS_IN_FILES=ON \
             -DCLANG_DEFAULT_LINKER=lld \
             -DCLANG_VENDOR=Tenjin \
