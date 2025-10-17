@@ -3,7 +3,7 @@ name: build and release non-LLVM deps
 on: workflow_dispatch
 
 jobs:
-  build:
+  buildlinux:
     strategy:
       fail-fast: true
       matrix:
@@ -30,9 +30,9 @@ jobs:
       - name: Get Git commit timestamp
         run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
 
-      - name: Build
+      - name: Build Linux deps
         run: |
-          cd thirdparty
+          cd thirdparty-linux
           mkdir -p out/bin
           mkdir -p out/lib
           mkdir -p out/include
@@ -51,10 +51,10 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.plat_machine }} 
-          path: thirdparty/*.tar.xz
+          path: thirdparty-linux/*.tar.xz
 
   release:
-    needs: build
+    needs: buildlinux
     runs-on: ubuntu-latest
     permissions:
       contents: write
