@@ -20,7 +20,7 @@ a Debian Bullseye installation to augment the build sysroot we use.
 
 # Licensing
 
-The source tarballs in `thirdparty/` are covered by
+The source tarballs in `thirdparty-*/` are covered by
 an assortment of open source licenses. The shell scripts and
 other files in this repository are MIT licensed.
 
