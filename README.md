@@ -4,7 +4,7 @@
 * GNU Diff 3.11
 * GNU Patch 2.8
 * GNU Automake 1.17
-* Ninja 1.12.1
+* Ninja 1.13.1
 * bubblewrap 0.11.0
 * pkg-config 0.29.2
 * xz 5.8.1
