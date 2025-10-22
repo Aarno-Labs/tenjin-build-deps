@@ -150,6 +150,17 @@ jobs:
         path: |
           *.tar.xz
 
+    - name: Emit job summary
+      run: |
+        echo "git-src.json:" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat $RELEASE_BINARY_BASENAME/git-src.json >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- uploading to release if not empty: ${{ (inputs.upload-to-release || '') }}" >> $GITHUB_STEP_SUMMARY
+
     - name: Upload to GitHub Release
       if: ${{ (inputs.upload-to-release || '') != '' }}
       run: |
