@@ -125,6 +125,11 @@ jobs:
       - name: Get short hash
         run: echo "SHORTHASH=$(echo ${{ github.sha }} | cut -c1-9)" >> $GITHUB_ENV
 
+      - name: Emit job summary
+        run: |
+          echo "- shorthash is $SHORTHASH" >> $GITHUB_STEP_SUMMARY
+          echo "- skipped release: ${{ inputs.skip-release }}" >> $GITHUB_STEP_SUMMARY
+
       - name: Create Release via gh
         if: ${{ ! inputs.skip-release }}
         env:

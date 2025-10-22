@@ -17,11 +17,13 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   cd /tmp/work
 
   tar xf /inputs/*.tar.*
-  cd ninja-*/
+  cd z3-*/
 
-  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs -DBUILD_TESTING=OFF
-  cmake --build   build --parallel
-  cp build/ninja /outputs/bin/ninja
+  apt-get update && apt-get -y --no-install-recommends install
+
+  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs
+  cmake --build   build -j 3
+  cmake --install build
 
   chown -R $(id -u):$(id -g) /outputs
 EOF
@@ -30,18 +32,17 @@ EOF
 
     Darwin*)
 ################################################################################
-  TMPDIR=/tmp/xj-ninja
+  TMPDIR=/tmp/xj-z3
   rm -rf $TMPDIR
   mkdir $TMPDIR
-  cd $TMPDIR 
+  cd $TMPDIR
 
   tar xf $SCRIPTDIR/*.tar.*
-  cd ninja-*/
+  cd z3-*/
 
-  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
-  cmake --build   build --parallel
-  mkdir -p       $OUTDIR/bin
-  cp build/ninja $OUTDIR/bin/ninja
+  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$OUTDIR
+  cmake --build   build -j 3
+  cmake --install build
 
   cd ..
   rm -rf $TMPDIR
@@ -53,4 +54,3 @@ EOF
         # Handle other operating systems or provide a default action
         ;;
 esac
-
