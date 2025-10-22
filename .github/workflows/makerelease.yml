@@ -1,6 +1,12 @@
 name: build and release non-LLVM deps
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      skip-release:
+        type: boolean
+        description: Skip release creation? For build testing
+        default: false
 
 jobs:
   buildlinux:
@@ -53,8 +59,57 @@ jobs:
           name: ${{ matrix.plat_machine }} 
           path: thirdparty-linux/*.tar.xz
 
+  buildcrossplat:
+    strategy:
+      fail-fast: true
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-14]
+        include:
+          - runner: ubuntu-latest
+            plat_machine: linux-x86_64
+          - runner: ubuntu-24.04-arm
+            plat_machine: linux-aarch64
+          - runner: macos-14
+            plat_machine: macos-aarch64
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Git commit timestamp
+        run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
+
+      - name: Build cross-platform deps
+        run: |
+          cd thirdparty-crossplat
+          mkdir -p out/bin
+          mkdir -p out/lib
+          mkdir -p out/include
+          for x in $(ls */build*.sh); do
+            bash $x
+          done
+
+          mv out xj-more-deps
+          tar caf xj-more-deps_${{ matrix.plat_machine }}.tar.xz xj-more-deps
+        env:
+          SOURCE_DATE_EPOCH: ${{ env.TIMESTAMP }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.plat_machine }}
+          path: thirdparty-crossplat/*.tar.xz
+
   release:
-    needs: buildlinux
+    needs: [buildlinux, buildcrossplat]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -70,6 +125,7 @@ jobs:
         run: echo "SHORTHASH=$(echo ${{ github.sha }} | cut -c1-9)" >> $GITHUB_ENV
 
       - name: Create Release via gh
+        if: ${{ ! inputs.skip-release }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
