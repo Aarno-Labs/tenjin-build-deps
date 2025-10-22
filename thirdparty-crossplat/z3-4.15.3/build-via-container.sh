@@ -41,7 +41,7 @@ EOF
   cd z3-*/
 
   cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$OUTDIR
-  cmake --build   build -- -j$(nproc --all)
+  cmake --build   build -j 3
   cmake --install build
 
   cd ..
