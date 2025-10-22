@@ -86,11 +86,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: ccache (on mac, since ubuntu runs builds in docker)
+        if: ${{ startsWith(matrix.runner, 'macos') }}
+        uses: hendrikmuhs/ccache-action@30ae3502c7f2d3200209bf2f90eccef2357896cf
+        with:
+          key: ${{ github.job }}-${{ matrix.runner }}
+
       - name: Get Git commit timestamp
         run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
 
       - name: Build cross-platform deps
         run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           cd thirdparty-crossplat
           mkdir -p out/bin
           mkdir -p out/lib
