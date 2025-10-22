@@ -2,13 +2,13 @@
 
 set -eux
 
+SCRIPTDIR=$(dirname $(realpath "$0"))
+source $SCRIPTDIR/../../thirdparty-linux/common-vars.sh
+
 OS_NAME=$(uname -s)
 case "${OS_NAME}" in
     Linux*)
 ################################################################################
-SCRIPTDIR=$(dirname $(realpath "$0"))
-source $SCRIPTDIR/../../thirdparty-linux/common-vars.sh
-
 docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
             --network=host \
                      $IMAGENAME    sh -s <<EOF
