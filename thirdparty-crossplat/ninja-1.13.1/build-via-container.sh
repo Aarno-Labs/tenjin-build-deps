@@ -39,7 +39,7 @@ EOF
   cd ninja-*/
 
   cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
-  cmake --build   build -- -j$(nproc --all)
+  cmake --build   build --parallel
   mkdir -p       $OUTDIR/bin
   cp build/ninja $OUTDIR/bin/ninja
 

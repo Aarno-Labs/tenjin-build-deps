@@ -22,7 +22,7 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   apt-get update && apt-get -y --no-install-recommends install
 
   cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs
-  cmake --build   build -- -j$(nproc --all)
+  cmake --build   build --parallel
   cmake --install build
 
   chown -R $(id -u):$(id -g) /outputs
