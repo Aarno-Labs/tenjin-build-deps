@@ -140,7 +140,7 @@ EOF
   TMPDIR=/tmp/xj-cclyzerpp
   rm -rf $TMPDIR
   mkdir $TMPDIR
-  cd $TMPDIR 
+  cd $TMPDIR
 
   # Build Boost
   echo "$BOOST_FETCH_AND_CONFIGURE" >> _b.sh
@@ -155,7 +155,7 @@ EOF
 
   # Step 3: build Souffle
   #
-  if [ -z "$CI" ]; then
+  if [ -z "${CI:-}" ]; then
     echo "++++++++++++++++++++++++++++++++"
     echo "Since we're not in CI, I won't forcibly install new  brew  packages,"
     echo "   but if the commands below fail, try       brew install flex bison"
