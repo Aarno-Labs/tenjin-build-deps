@@ -37,10 +37,10 @@ EOF
   if [ -z "${CI:-}" ]; then
     echo "++++++++++++++++++++++++++++++++"
     echo "Since we're not in CI, I won't forcibly install new  brew  packages,"
-    echo "   but if the commands below fail, try       brew install grpc pkg-config"
+    echo "   but if the commands below fail, try       brew install fmt spdlog nlohmann-json grpc pkg-config"
     echo "++++++++++++++++++++++++++++++++"
   else
-    brew install grpc pkg-config
+    brew install fmt spdlog nlohmann-json grpc pkg-config
   fi
 
   TMPDIR=/tmp/xj-bear
