@@ -46,8 +46,8 @@ jobs:
             bash $x
           done
 
-          mv out xj-build-deps 
-          tar caf xj-build-deps_${{ matrix.plat_machine }}.tar.xz xj-build-deps 
+          mv out xj-build-deps
+          tar caf xj-build-deps_${{ matrix.plat_machine }}.tar.xz xj-build-deps
 
           tar caf xj-bullseye-sysroot-extras_${{ matrix.plat_machine }}.tar.xz \
                    debian-bullseye_gcc_glibc/${{ matrix.plat_machine }}
@@ -56,7 +56,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.plat_machine }} 
+          name: ${{ matrix.plat_machine }}
           path: thirdparty-linux/*.tar.xz
 
   buildcrossplat:
