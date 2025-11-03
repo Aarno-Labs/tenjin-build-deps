@@ -139,6 +139,8 @@ jobs:
         echo 'computing git-src.json'
         git log -n1 --pretty='{"commit":"%H","treehash":"%T","url":"${{ github.repositoryUrl }}"}' | jq > $RELEASE_BINARY_BASENAME/git-src.json
         cat $RELEASE_BINARY_BASENAME/git-src.json
+        git log -n1 --pretty='{"commit":"%H","treehash":"%T"}' -C llvmproj | jq > $RELEASE_BINARY_BASENAME/llvm-git-src.json
+        cat $RELEASE_BINARY_BASENAME/llvm-git-src.json
 
         XZ_OPT=-9 tar caf $RELEASE_BINARY_FILENAME $RELEASE_BINARY_BASENAME
 
@@ -156,6 +158,13 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
         cat $RELEASE_BINARY_BASENAME/git-src.json >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "llvm-git-src.json:" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat $RELEASE_BINARY_BASENAME/llvm-git-src.json >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
