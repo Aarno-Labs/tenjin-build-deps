@@ -34,6 +34,8 @@ ls -lh "$BUILD_DIR"
 ninja -v -C "$BUILD_DIR"
 ls -lh "$BUILD_DIR"
 
+LIT_FILTER=clang-refold ninja -v -C "$BUILD_DIR" check-clang-tools
+
 if [ "$BUILDER_FLAVOR" = "docker" ]; then
   # Since Docker is not rootless in GitHub Actions,
   # the files it builds will be owned by root. If

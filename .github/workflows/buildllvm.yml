@@ -146,11 +146,6 @@ jobs:
 
         ls -lh *.tar.*
 
-    - name: Run Tests for clang-refold
-      shell: bash
-      run: |
-        LIT_FILTER=clang-refold ninja -C llvmproj/_build check-clang-tools
-
     - uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 #v4.3.0
       with:
         name: ${{ runner.os }}-${{ runner.arch }}-built_on_${{ matrix.runner }}
