@@ -137,9 +137,9 @@ jobs:
         touch $RELEASE_BINARY_BASENAME/bin/c-index-test
 
         echo 'computing git-src.json'
-        git log -n1 --pretty='{"commit":"%H","treehash":"%T","url":"${{ github.repositoryUrl }}"}' | jq > $RELEASE_BINARY_BASENAME/git-src.json
+        git             log -n1 --pretty='{"commit":"%H","treehash":"%T","url":"${{ github.repositoryUrl }}"}' | jq > $RELEASE_BINARY_BASENAME/git-src.json
         cat $RELEASE_BINARY_BASENAME/git-src.json
-        git log -n1 --pretty='{"commit":"%H","treehash":"%T"}' -C llvmproj | jq > $RELEASE_BINARY_BASENAME/llvm-git-src.json
+        git -C llvmproj log -n1 --pretty='{"commit":"%H","treehash":"%T"}' | jq > $RELEASE_BINARY_BASENAME/llvm-git-src.json
         cat $RELEASE_BINARY_BASENAME/llvm-git-src.json
 
         XZ_OPT=-9 tar caf $RELEASE_BINARY_FILENAME $RELEASE_BINARY_BASENAME
