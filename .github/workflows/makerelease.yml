@@ -116,6 +116,13 @@ jobs:
           name: ${{ matrix.plat_machine }}
           path: thirdparty-crossplat/*.tar.xz
 
+      - name: Test cc2json
+        run: |
+          echo '#include <stdio.h>' >> hello.c
+          echo 'int main() { printf("hello\n"); return 0; }' >> hello.c
+          clang -c -emit-llvm hello.h
+          xj-more-deps/bin/cc2json hello.bc --datalog-analysis=unification --debug-datalog=false --context-sensitivity=insensitive --json-out=hello.cclyzer.json
+
   release:
     needs: [buildlinux, buildcrossplat]
     runs-on: ubuntu-latest
