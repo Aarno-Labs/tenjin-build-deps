@@ -121,7 +121,7 @@ jobs:
           echo '#include <stdio.h>' >> hello.c
           echo 'int main() { printf("hello\n"); return 0; }' >> hello.c
           clang -c -emit-llvm hello.c
-          xj-more-deps/bin/cc2json hello.bc --datalog-analysis=unification --debug-datalog=false --context-sensitivity=insensitive --json-out=hello.cclyzer.json
+          ./thirdparty-crossplat/xj-more-deps/bin/cc2json hello.bc --datalog-analysis=unification --debug-datalog=false --context-sensitivity=insensitive --json-out=hello.cclyzer.json
 
   release:
     needs: [buildlinux, buildcrossplat]
