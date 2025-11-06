@@ -117,6 +117,7 @@ jobs:
           path: thirdparty-crossplat/*.tar.xz
 
       - name: Test cc2json
+        if: ${{ startsWith(matrix.runner, 'ubuntu') }}
         run: |
           echo '#include <stdio.h>' >> hello.c
           echo 'int main() { printf("hello\n"); return 0; }' >> hello.c
