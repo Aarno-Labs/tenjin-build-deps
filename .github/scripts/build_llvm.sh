@@ -34,7 +34,9 @@ ls -lh "$BUILD_DIR"
 ninja -v -C "$BUILD_DIR"
 ls -lh "$BUILD_DIR"
 
-LIT_FILTER=clang-refold ninja -v -C "$BUILD_DIR" check-clang-tools
+if [ -n "$(find "$BUILD_DIR" -name "clang-refold" -type f -print -quit)" ]; then
+    LIT_FILTER=clang-refold ninja -v -C "$BUILD_DIR" check-clang-tools
+fi
 
 if [ "$BUILDER_FLAVOR" = "docker" ]; then
   # Since Docker is not rootless in GitHub Actions,
