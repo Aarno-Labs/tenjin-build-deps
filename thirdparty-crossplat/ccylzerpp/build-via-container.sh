@@ -64,10 +64,15 @@ EOM
 
 # The specific commit here doesn't matter too much, just the LLVM version.
 GET_XJ_LLVM_CLANG=$(cat << EOM
+  wget https://github.com/Aarno-Labs/tenjin-build-deps/releases/download/rev-3b85e47e7/LLVM-18.1.8+refold-$(uname -s)-$(uname -m | sed 's/arm64/aarch64/').tar.xz
+  tar xf LLVM-*.tar.xz
+  rm     LLVM-*.tar.xz
+  mv LLVM-* xj-llvm-18
+
   wget https://github.com/Aarno-Labs/tenjin-build-deps/releases/download/llvmorg-14.0.6/LLVM-${LLVM_FULL_VERSION}-$(uname -s)-$(uname -m | sed 's/arm64/aarch64/').tar.xz
   tar xf LLVM-*.tar.xz
   rm     LLVM-*.tar.xz
-  mv LLVM-* xj-llvm
+  mv LLVM-* xj-llvm-14
 EOM
 )
 
@@ -117,14 +122,14 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   #
   $GET_XJ_LLVM_CLANG
 
-  export PATH="\$PATH":/tmp/work/localsouffle/bin:/tmp/work/xj-llvm/bin
+  export PATH="\$PATH":/tmp/work/localsouffle/bin:/tmp/work/xj-llvm-14/bin
 
   # Step 5: build cclyzerpp
   #
   git clone https://github.com/brk/cclyzerpp
   cd cclyzerpp
   git switch --detach $TENJIN_CCLYZER_COMMIT 
-  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=/tmp/work/localsouffle/include/ -DBoost_ROOT=/tmp/work/localboost -DLLVM_DIR=/tmp/work/xj-llvm/lib/cmake/llvm
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=/tmp/work/localsouffle/include/ -DBoost_ROOT=/tmp/work/localboost -DLLVM_DIR=/tmp/work/xj-llvm-14/lib/cmake/llvm
 
   cmake --build build -j 3 --target cc2json
 
@@ -178,7 +183,8 @@ EOF
   cd $TMPDIR
   sh -c "$GET_XJ_LLVM_CLANG"
 
-  export PATH=$TMPDIR/localsouffle/bin:$TMPDIR/xj-llvm/bin:"$PATH"
+  # Note: we keep LLVM 18 in PATH but use it to build against LLVM 14!
+  export PATH=$TMPDIR/localsouffle/bin:$TMPDIR/xj-llvm-18/bin:"$PATH"
 
 
   # Step 5: build cclyzerpp
@@ -186,7 +192,7 @@ EOF
   git clone https://github.com/brk/cclyzerpp
   cd cclyzerpp
   git switch --detach $TENJIN_CCLYZER_COMMIT 
-  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=$TMPDIR/localsouffle/include/ -DBoost_ROOT=$TMPDIR/localboost -DLLVM_DIR=$TMPDIR/xj-llvm/lib/cmake/llvm -DSOUFFLE_USE_LIBFFI=OFF -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DOpenMP_CXX_FLAGS="-fopenmp" -DOpenMP_CXX_INCLUDE_DIR="$(echo $TMPDIR/xj-llvm/lib/clang/${LLVM_MAJOR_VERSION}*/include/)" -DOpenMP_CXX_LIB_NAMES=""
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=$TMPDIR/localsouffle/include/ -DBoost_ROOT=$TMPDIR/localboost -DLLVM_DIR=$TMPDIR/xj-llvm-14/lib/cmake/llvm -DSOUFFLE_USE_LIBFFI=OFF -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DOpenMP_CXX_FLAGS="-fopenmp" -DOpenMP_CXX_INCLUDE_DIR="$(echo $TMPDIR/xj-llvm-14/lib/clang/${LLVM_MAJOR_VERSION}*/include/)" -DOpenMP_CXX_LIB_NAMES=""
 
   cmake --build build --parallel --target cc2json
 
