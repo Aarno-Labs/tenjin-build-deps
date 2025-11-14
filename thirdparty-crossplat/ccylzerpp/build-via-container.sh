@@ -2,7 +2,7 @@
 
 set -eux
 
-TENJIN_CCLYZER_COMMIT=8a6e36a2b3854417e7744a36c464f631ac42f633
+TENJIN_CCLYZER_COMMIT=f63c528fd518d0f0701a9ba3f55311e0ada7f7ec
 
 # The final `cc2json` binary dynamically links to (this specific version of) libLLVM,
 # so this LLVM version is part of our (conceptually) exported interface.
@@ -186,7 +186,7 @@ EOF
   git clone https://github.com/brk/cclyzerpp
   cd cclyzerpp
   git switch --detach $TENJIN_CCLYZER_COMMIT 
-  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=$TMPDIR/localsouffle/include/ -DBoost_ROOT=$TMPDIR/localboost -DLLVM_DIR=$TMPDIR/xj-llvm/lib/cmake/llvm -DSOUFFLE_USE_LIBFFI=OFF -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DOpenMP_CXX_FLAGS="-fopenmp" -DOpenMP_CXX_INCLUDE_DIR="$TMPDIR/xj-llvm/lib/clang/${LLVM_MAJOR_VERSION}/include/" -DOpenMP_CXX_LIB_NAMES=""
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_MAJOR_VERSION=${LLVM_MAJOR_VERSION} -DLLVM_PARTIAL_VERSION=${LLVM_PARTIAL_VERSION} -DSOUFFLE_INCLUDE=$TMPDIR/localsouffle/include/ -DBoost_ROOT=$TMPDIR/localboost -DLLVM_DIR=$TMPDIR/xj-llvm/lib/cmake/llvm -DSOUFFLE_USE_LIBFFI=OFF -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DOpenMP_CXX_FLAGS="-fopenmp" -DOpenMP_CXX_INCLUDE_DIR="$(echo $TMPDIR/xj-llvm/lib/clang/${LLVM_MAJOR_VERSION}*/include/)" -DOpenMP_CXX_LIB_NAMES=""
 
   cmake --build build --parallel --target cc2json
 
