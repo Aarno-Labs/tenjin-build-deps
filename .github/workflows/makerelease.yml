@@ -119,10 +119,15 @@ jobs:
       - name: Test cc2json
         if: ${{ startsWith(matrix.runner, 'ubuntu') }}
         run: |
+          wget https://github.com/Aarno-Labs/tenjin-build-deps/releases/download/llvmorg-14.0.6/LLVM-14.0.6-$(uname -s)-$(uname -m | sed 's/arm64/aarch64/').tar.xz
+          tar xf LLVM-*.tar.xz
+          rm     LLVM-*.tar.xz
+          mv LLVM-* xj-llvm-14
+
           echo '#include <stdio.h>' >> hello.c
           echo 'int main() { printf("hello\n"); return 0; }' >> hello.c
-          clang -c -emit-llvm hello.c
-          ./thirdparty-crossplat/xj-more-deps/bin/cc2json hello.bc --datalog-analysis=unification --debug-datalog=false --context-sensitivity=insensitive --json-out=hello.cclyzer.json
+          ./xj-llvm-14/bin/clang -c -emit-llvm hello.c
+          LD_LIBRARY_PATH=$PWD/xj-llvm-14/lib ./thirdparty-crossplat/xj-more-deps/bin/cc2json-llvm14 hello.bc --datalog-analysis=unification --debug-datalog=false --context-sensitivity=insensitive --json-out=hello.cclyzer.json
 
   release:
     needs: [buildlinux, buildcrossplat]

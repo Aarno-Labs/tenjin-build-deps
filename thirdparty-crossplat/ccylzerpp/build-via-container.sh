@@ -134,7 +134,7 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   cmake --build build -j 3 --target cc2json
 
   mkdir -p /outputs/bin
-  cp build/cc2json /outputs/bin
+  cp build/cc2json /outputs/bin/cc2json-llvm${LLVM_MAJOR_VERSION}
   git log -n1 > /outputs/cclyzerpp-tenjin-HEAD-log.txt
 
   chown -R $(id -u):$(id -g) /outputs
