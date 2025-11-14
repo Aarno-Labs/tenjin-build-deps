@@ -2,13 +2,13 @@
 
 set -eux
 
-TENJIN_CCLYZER_COMMIT=04d000b047f62c1ceb2304b8952bfcadb63434f9
+TENJIN_CCLYZER_COMMIT=8a6e36a2b3854417e7744a36c464f631ac42f633
 
 # The final `cc2json` binary dynamically links to (this specific version of) libLLVM,
 # so this LLVM version is part of our (conceptually) exported interface.
-LLVM_MAJOR_VERSION="18"
-LLVM_PARTIAL_VERSION="${LLVM_MAJOR_VERSION}.1"
-LLVM_FULL_VERSION="${LLVM_PARTIAL_VERSION}.8"
+LLVM_MAJOR_VERSION="14"
+LLVM_PARTIAL_VERSION="${LLVM_MAJOR_VERSION}.0"
+LLVM_FULL_VERSION="${LLVM_PARTIAL_VERSION}.6"
 # Note if you change the version, you'll also need to change the release rev URL below.
 
 # Ugh, this is FUBAR. The two root issues are that (1) we want slightly different code to run
@@ -64,7 +64,7 @@ EOM
 
 # The specific commit here doesn't matter too much, just the LLVM version.
 GET_XJ_LLVM_CLANG=$(cat << EOM
-  wget https://github.com/Aarno-Labs/tenjin-build-deps/releases/download/rev-2523bdaf6/LLVM-${LLVM_FULL_VERSION}-$(uname -s)-$(uname -m | sed 's/arm64/aarch64/').tar.xz
+  wget https://github.com/Aarno-Labs/tenjin-build-deps/releases/download/llvmorg-14.0.6/LLVM-${LLVM_FULL_VERSION}-$(uname -s)-$(uname -m | sed 's/arm64/aarch64/').tar.xz
   tar xf LLVM-*.tar.xz
   rm     LLVM-*.tar.xz
   mv LLVM-* xj-llvm
@@ -191,7 +191,7 @@ EOF
   cmake --build build --parallel --target cc2json
 
   mkdir -p $OUTDIR/bin/
-  cp build/cc2json $OUTDIR/bin/
+  cp build/cc2json $OUTDIR/bin/cc2json-llvm${LLVM_MAJOR_VERSION}
   git log -n1 > $OUTDIR/cclyzerpp-tenjin-HEAD-log.txt
 
   cd ..
