@@ -2,7 +2,7 @@
 
 set -eux
 
-TENJIN_CCLYZER_COMMIT=f63c528fd518d0f0701a9ba3f55311e0ada7f7ec
+TENJIN_CCLYZER_COMMIT=3d5dd021743a4ba47278afe8a92cd3606f6dd213
 
 # The final `cc2json` binary dynamically links to (this specific version of) libLLVM,
 # so this LLVM version is part of our (conceptually) exported interface.
