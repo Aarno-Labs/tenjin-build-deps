@@ -15,6 +15,7 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   tar xf /inputs/*.tar.*
   cd automake-*/
 
+  # XREF(tenjin-build-deps-automake-prefix)
   ./configure --prefix=/outputs
   make -j4
   make install
