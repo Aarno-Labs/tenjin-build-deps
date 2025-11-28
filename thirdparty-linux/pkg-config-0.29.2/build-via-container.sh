@@ -9,14 +9,6 @@ source $SCRIPTDIR/../common-vars.sh
 
 PROGNAME=pkg-config
 
-# For context on this nonsense, see COMMENTARY(pkg-config-paths) in the Tenjin CLI source.
-# The contents are designed for greppability, e.g. search for "itlaterok/prefix" or whatever.
-#
-FIFTY=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-RILLY=thisverylongpathistogiveusroomtooverwriteitlaterok
-TWOHUNDREDFIFTY=${FIFTY}${FIFTY}${FIFTY}${FIFTY}${RILLY}
-PATH_OF_UNUSUAL_SIZE=/tmp/$TWOHUNDREDFIFTY/$TWOHUNDREDFIFTY
-
 docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
             --network=host \
             --user $(id -u):$(id -g) \

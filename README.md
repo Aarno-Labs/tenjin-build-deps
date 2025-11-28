@@ -4,6 +4,7 @@
 * GNU Diff 3.11
 * GNU Patch 2.8
 * GNU Automake 1.17
+* GNU M4 1.4.20
 * Ninja 1.13.1
 * bubblewrap 0.11.0
 * pkg-config 0.29.2
@@ -36,6 +37,15 @@ Make is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 3 of the License,
 or (at your option) any later version.
+```
+
+## M4
+
+```
+GNU M4 is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
 ```
 
 ## Diff
