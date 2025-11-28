@@ -4,6 +4,7 @@
 * GNU Diff 3.11
 * GNU Patch 2.8
 * GNU Automake 1.17
+* GNU Autoconf 2.69
 * GNU M4 1.4.20
 * Ninja 1.13.1
 * bubblewrap 0.11.0
@@ -76,6 +77,12 @@ or (at your option) any later version.
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 ```
+
+## Autoconf and Automake
+
+The source files of these programs use a mix of GPLv2 and GPLv3 copyright
+notices. For simplicity, we redistribute these packages under the terms
+of the GPLv3.
 
 ## Ninja
 
