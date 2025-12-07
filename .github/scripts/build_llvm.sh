@@ -24,6 +24,7 @@ cmake -G Ninja -S "$LLVMROOT"/llvm -B "$BUILD_DIR" \
             -DLLVM_ENABLE_HTTPLIB=OFF \
             -DLLVM_ENABLE_TERMINFO=OFF \
             -DLLVM_ENABLE_PROJECTS="llvm;clang;lld;clang-tools-extra;openmp" \
+            -DLLVM_ENABLE_RUNTIMES="compiler-rt" \
             -DLLVM_USE_RELATIVE_PATHS_IN_FILES=ON \
             -DCLANG_ENABLE_CLANGD=OFF \
             -DCLANG_DEFAULT_LINKER=lld \
@@ -33,6 +34,8 @@ cmake -G Ninja -S "$LLVMROOT"/llvm -B "$BUILD_DIR" \
 ls -lh "$BUILD_DIR"
 ninja -v -C "$BUILD_DIR"
 ls -lh "$BUILD_DIR"
+
+ninja -v -C "$BUILD_DIR" profile || echo "Unable to build 'ninja profile' target"
 
 if [ -n "$(find "$BUILD_DIR" -name "clang-refold" -type f -print -quit)" ]; then
     LIT_FILTER=clang-refold ninja -v -C "$BUILD_DIR" check-clang-tools
