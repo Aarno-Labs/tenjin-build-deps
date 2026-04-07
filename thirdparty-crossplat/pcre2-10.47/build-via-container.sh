@@ -37,7 +37,7 @@ EOF
   tar xf $SCRIPTDIR/*.tar.*
   cd pcre2-*/
 
-  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs -DBUILD_SHARED_LIBS=ON -DPCRE2_STATIC_PIC=ON
+  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$OUTDIR -DBUILD_SHARED_LIBS=ON -DPCRE2_STATIC_PIC=ON
   cmake --build   build --target install --parallel
 
   cd ..
