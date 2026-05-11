@@ -24,10 +24,10 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Log in to the Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -54,7 +54,7 @@ jobs:
         env:
           SOURCE_DATE_EPOCH: ${{ env.TIMESTAMP }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.plat_machine }}
           path: thirdparty-linux/*.tar.xz
@@ -76,11 +76,11 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Log in to the Container Registry
         if: ${{ startsWith(matrix.runner, 'ubuntu') }}
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -88,7 +88,7 @@ jobs:
 
       - name: ccache (on mac, since ubuntu runs builds in docker)
         if: ${{ startsWith(matrix.runner, 'macos') }}
-        uses: hendrikmuhs/ccache-action@30ae3502c7f2d3200209bf2f90eccef2357896cf
+        uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03  # v1.2.23
         with:
           key: ${{ github.job }}-${{ matrix.runner }}
 
@@ -111,7 +111,7 @@ jobs:
         env:
           SOURCE_DATE_EPOCH: ${{ env.TIMESTAMP }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.plat_machine }}
           path: thirdparty-crossplat/*.tar.xz
@@ -135,10 +135,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true  # otherwise, we'd get each platform's tarball in separate directories
 

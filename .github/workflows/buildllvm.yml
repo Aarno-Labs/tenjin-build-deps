@@ -28,15 +28,15 @@ jobs:
     steps:
     # It's good practice to use setup-python, but this is also required on macos-14
     # due to https://github.com/actions/runner-images/issues/10385
-    - uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f
+    - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: '3.12'
 
     - name: Checkout builder repo
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      uses: actions/checkout@v6
 
     - name: Checkout Tenjin LLVM
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      uses: actions/checkout@v6
       with:
         repository: 'Aarno-Labs/llvm-project'
         ref: 'tenjin-${{ inputs.release-version }}'
@@ -50,7 +50,11 @@ jobs:
         pip install -r ./llvmproj/llvm/utils/git/requirements.txt
 
     - name: Install Ninja
-      uses: llvm/actions/install-ninja@22e9f909d35b50bd1181709564bfe816eaeaae81 # main
+      shell: bash
+      run: |
+        python3 .github/scripts/install_ninja.py
+      env:
+        INPUT_OS: ${{ runner.os }}
 
     - name: Collect Variables
       id: vars
@@ -146,7 +150,7 @@ jobs:
 
         ls -lh *.tar.*
 
-    - uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 #v4.3.0
+    - uses: actions/upload-artifact@v7
       with:
         name: ${{ runner.os }}-${{ runner.arch }}-built_on_${{ matrix.runner }}
         path: |
@@ -176,4 +180,3 @@ jobs:
         gh release upload ${{ inputs.upload-to-release }} *.tar.xz
       env:
         GH_TOKEN: ${{ github.token }}
-
