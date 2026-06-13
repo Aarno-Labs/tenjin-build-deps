@@ -21,17 +21,11 @@ jobs:
   build:
     strategy:
       matrix:
-        runner: [ubuntu-22.04, ubuntu-22.04-arm, macos-14]
+        runner: [ubuntu-22.04, ubuntu-22.04-arm, macos-15]
 
     runs-on: ${{ matrix.runner }}
 
     steps:
-    # It's good practice to use setup-python, but this is also required on macos-14
-    # due to https://github.com/actions/runner-images/issues/10385
-    - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-      with:
-        python-version: '3.12'
-
     - name: Checkout builder repo
       uses: actions/checkout@v6
 

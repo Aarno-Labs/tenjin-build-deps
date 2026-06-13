@@ -63,13 +63,13 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-14]
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-15]
         include:
           - runner: ubuntu-latest
             plat_machine: linux-x86_64
           - runner: ubuntu-24.04-arm
             plat_machine: linux-aarch64
-          - runner: macos-14
+          - runner: macos-15
             plat_machine: macos-aarch64
     runs-on: ${{ matrix.runner }}
     permissions:
