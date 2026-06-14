@@ -76,6 +76,15 @@ jobs:
           fi
           target_cmake_flags="$target_cmake_flags -DDARWIN_osx_ARCHS=$arches -DDARWIN_osx_BUILTIN_ARCHS=$arches"
         fi
+        if [ "${{ runner.os }}" = "Linux" ]; then
+          # The build container ships no 32-bit multilib, but on x86_64 the
+          # builtins build otherwise configures an i386 slice (the arch probe only
+          # checks __i386__, which needs no libc headers) and then fails compiling
+          # 32-bit sources against the missing headers. Restrict runtimes to the
+          # default target so only the host arch is built. This propagates to the
+          # builtins-bins sub-build via PASSTHROUGH_PREFIXES COMPILER_RT.
+          target_cmake_flags="$target_cmake_flags -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON"
+        fi
         echo "TARGET_CMAKE_FLAGS=$target_cmake_flags" >> $GITHUB_ENV
  
     - name: Disable llvm-exegesis
