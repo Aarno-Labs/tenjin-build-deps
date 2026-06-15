@@ -21,7 +21,8 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
 
   apt-get update && apt-get -y --no-install-recommends install
 
-  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs
+  # Make sure even libz.a is built with -fPIC
+  cmake -B build -S . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/outputs -DCMAKE_C_FLAGS="-fPIC"
   cmake --build   build -- -j$(nproc --all)
   cmake --install build
 
