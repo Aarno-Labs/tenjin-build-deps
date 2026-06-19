@@ -5,7 +5,8 @@ set -eux
 SCRIPTDIR=$(dirname $(realpath "$0"))
 source $SCRIPTDIR/../../thirdparty-linux/common-vars.sh
 
-CRISP_COMMIT=4d36859307940ac3ab79d6beeb4389bdb6be2039
+CRISP_REPO=https://github.com/Aarno-Labs/Tractor-Crisp
+CRISP_COMMIT=010470a663628bce89d22c6f80db5a4ff9b86c18
 
 OS_NAME=$(uname -s)
 case "${OS_NAME}" in
@@ -21,7 +22,7 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   mkdir /tmp/work
   cd /tmp/work
 
-  git clone https://github.com/GaloisInc/Tractor-Crisp
+  git clone $CRISP_REPO 
   cd Tractor-Crisp
   git switch --detach $CRISP_COMMIT
 
@@ -48,7 +49,7 @@ EOF
   mkdir $TMPDIR
   cd $TMPDIR
 
-  git clone https://github.com/GaloisInc/Tractor-Crisp
+  git clone $CRISP_REPO 
   cd Tractor-Crisp
   git switch --detach $CRISP_COMMIT
 
