@@ -2,6 +2,9 @@
 
 set -eux
 
+SCRIPTDIR=$(dirname $(realpath "$0"))
+source $SCRIPTDIR/../../thirdparty-linux/common-vars.sh
+
 CRISP_COMMIT=4d36859307940ac3ab79d6beeb4389bdb6be2039
 
 OS_NAME=$(uname -s)
