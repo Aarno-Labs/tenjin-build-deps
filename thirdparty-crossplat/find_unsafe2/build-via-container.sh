@@ -3,8 +3,8 @@
 set -eux
 
 CLONE_AND_CD=$(cat << EOM
-  git clone https://github.com/GaloisInc/Tractor-Crisp
-  cd Tractor-Crisp
+  git clone https://github.com/GaloisInc/Tractor-Crisp          ;
+  cd Tractor-Crisp                                              ;
   git switch --detach 4d36859307940ac3ab79d6beeb4389bdb6be2039
 EOM
 )
