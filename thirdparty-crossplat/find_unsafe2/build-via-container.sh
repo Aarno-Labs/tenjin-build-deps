@@ -2,12 +2,7 @@
 
 set -eux
 
-CLONE_AND_CD=$(cat << EOM
-  git clone https://github.com/GaloisInc/Tractor-Crisp          ;
-  cd Tractor-Crisp                                              ;
-  git switch --detach 4d36859307940ac3ab79d6beeb4389bdb6be2039
-EOM
-)
+CRISP_COMMIT=4d36859307940ac3ab79d6beeb4389bdb6be2039
 
 OS_NAME=$(uname -s)
 case "${OS_NAME}" in
@@ -23,7 +18,9 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   mkdir /tmp/work
   cd /tmp/work
 
-  $CLONE_AND_CD
+  git clone https://github.com/GaloisInc/Tractor-Crisp
+  cd Tractor-Crisp
+  git switch --detach $CRISP_COMMIT
 
   cd tools
   cargo build --release -p find_unsafe2
@@ -46,9 +43,11 @@ EOF
   TMPDIR=/tmp/xj-boost
   rm -rf $TMPDIR
   mkdir $TMPDIR
-  cd $TMPDIR 
-  
-  $CLONE_AND_CD
+  cd $TMPDIR
+
+  git clone https://github.com/GaloisInc/Tractor-Crisp
+  cd Tractor-Crisp
+  git switch --detach $CRISP_COMMIT
 
   cd tools
   cargo build --release -p find_unsafe2
