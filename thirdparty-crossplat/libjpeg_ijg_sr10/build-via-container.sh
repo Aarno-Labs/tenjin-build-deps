@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eux
 
@@ -11,7 +11,7 @@ case "${OS_NAME}" in
 ################################################################################
 docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
             --network=host \
-                     $IMAGENAME    sh -s <<EOF
+                     $IMAGENAME    bash -s <<EOF
   set -eux
   mkdir /tmp/work
   cd /tmp/work
@@ -26,7 +26,7 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   make install
 
   # We only need the libraries, and the binaries embed the build dir in RUNPATH
-  rm /outputs/bin/*
+  rm /outputs/bin/{cjpeg,djpeg,jpegtran,rdjpgcom,wrjpgcom}
 
   chown -R $(id -u):$(id -g) /outputs
 EOF
@@ -54,7 +54,7 @@ EOF
   sed -i'' -e "s|$OUTDIR|/outputs|g" $OUTDIR/lib/pkgconfig/libjpeg.pc
 
   # We only need the libraries, and the binaries embed the build dir in RUNPATH
-  rm $OUTDIR/bin/*
+  rm $OUTDIR/bin/{cjpeg,djpeg,jpegtran,rdjpgcom,wrjpgcom}
 
   cd ..
   rm -rf $TMPDIR
