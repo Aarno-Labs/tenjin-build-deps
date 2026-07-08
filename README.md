@@ -5,6 +5,7 @@
 * GNU Patch 2.8
 * GNU Automake 1.17
 * GNU Autoconf 2.69
+* GNU libtool 2.5.4
 * GNU M4 1.4.20
 * GNU MP 6.3.0
 * Ninja 1.13.1
@@ -91,6 +92,11 @@ or (at your option) any later version.
 The source files of these programs use a mix of GPLv2 and GPLv3 copyright
 notices. For simplicity, we redistribute these packages under the terms
 of the GPLv3.
+
+## Libtool
+
+Libtool is primarily covered by GPLv2, with libltdl under LGPLv2.1-or-later,
+both with a libtool exception clause.
 
 
 ## GNU MP Copying Conditions
