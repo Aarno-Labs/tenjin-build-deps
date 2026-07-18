@@ -23,6 +23,7 @@
 * Z3 4.15.3
 * pcre2 10.47
 * libevent 2.1.12
+* freetype2 2.14.3
 * libjpeg (ijg) sr10
 * libpng 1.6.58
 * zlib 1.4.1.1 (prerelease)
@@ -126,6 +127,16 @@ Also, for our own protection, we must make certain that everyone finds out that 
 More precisely, the GNU MP library is dual licensed, under the conditions of the GNU Lesser General Public License version 3 (see COPYING.LESSERv3), or the GNU General Public License version 2 (see COPYINGv2). This is the recipient’s choice, and the recipient also has the additional option of applying later versions of these licenses. (The reason for this dual licensing is to make it possible to use the library with programs which are licensed under GPL version 2, but which for historical or other reasons do not allow use under later versions of the GPL.)
 
 Programs which are not part of the library itself, such as demonstration programs and the GMP testsuite, are licensed under the terms of the GNU General Public License version 3 (see COPYINGv3), or any later version.
+
+## FreeType
+
+The FreeType source code is covered by the FreeType Project License, which may be viewed at
+https://spdx.org/licenses/FTL.html
+
+```
+    Portions of this software are copyright © 2026 The FreeType
+    Project (https://freetype.org).  All rights reserved.
+```
 
 ## Ninja
 
