@@ -7,6 +7,7 @@
 * GNU Autoconf 2.69
 * GNU gettext 0.24.1
 * GNU libtool 2.5.4
+* GNU bison 3.8.2
 * GNU gperf 3.2
 * GNU M4 1.4.20
 * GNU MP 6.3.0
@@ -104,6 +105,15 @@ Gettext is primarily covered by GPLv2, with libintl under LGPLv2.1-or-later.
 
 Libtool is primarily covered by GPLv2, with libltdl under LGPLv2.1-or-later,
 both with a libtool exception clause.
+
+## Bison
+
+```
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+```
 
 ## GPERF
 
