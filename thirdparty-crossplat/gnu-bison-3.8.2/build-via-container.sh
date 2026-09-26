@@ -19,7 +19,8 @@ docker run --rm -i -v $SCRIPTDIR:/inputs -v $OUTDIR:/outputs \
   tar xf /inputs/*.tar.*
   cd bison-*/
 
-  ./configure --prefix=/outputs --enable-relocatable --disable-nls
+  # Search PATH for m4 at runtime instead of hardcoding /usr/bin/m4.
+  ./configure --prefix=/outputs --enable-relocatable --disable-nls M4=m4
   make -j4
   make install
 
@@ -38,7 +39,8 @@ EOF
   tar xf $SCRIPTDIR/*.tar.*
   cd bison-*/
 
-  ./configure --prefix=$OUTDIR --enable-relocatable --disable-nls
+  # Search PATH for m4 at runtime instead of hardcoding /usr/bin/m4.
+  ./configure --prefix=$OUTDIR --enable-relocatable --disable-nls M4=m4
   make -j4
   make install
 
