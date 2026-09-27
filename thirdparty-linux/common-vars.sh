@@ -1,5 +1,5 @@
 BUILDERNAME="${BUILDER:-debian-bullseye}"
-IMAGENAME="ghcr.io/aarno-labs/tenjin-${BUILDERNAME}-builder:rev-85f982358"
+IMAGENAME="ghcr.io/aarno-labs/tenjin-${BUILDERNAME}-builder:rev-d52087a10"
 TMPSUBDIR=/tmp/tenjin-build-deps/canary/183018384101018888
 
 OUTDIR=$(realpath $SCRIPTDIR/../out)
