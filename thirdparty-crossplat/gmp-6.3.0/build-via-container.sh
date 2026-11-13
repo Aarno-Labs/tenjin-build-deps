@@ -44,6 +44,11 @@ EOF
   make -j
   make install
 
+  # Tenjin relocates these /outputs placeholders when provisioning.
+  sed -i '' -e "s|$OUTDIR|/outputs|g" \
+    "$OUTDIR/gmp-6.3.0/lib/libgmp.la" \
+    "$OUTDIR/gmp-6.3.0/lib/pkgconfig/gmp.pc"
+
   cd ..
   rm -rf $TMPDIR
 ################################################################################
